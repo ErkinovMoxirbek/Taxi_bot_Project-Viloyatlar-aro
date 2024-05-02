@@ -1,5 +1,6 @@
 package com.example.util;
 
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -19,9 +20,11 @@ public class ReplyKeyboardUtil {
         KeyboardButton button = new KeyboardButton();
         button.setText(" ☎️ Kontaktni yuborish");
         button.setRequestContact(true);
+        KeyboardButton button2 = button("❌ Bekor qilish");
 
         KeyboardRow row = new KeyboardRow();
         row.add(button);
+        row.add(button2);
 
         List<KeyboardRow> rowList = new LinkedList<>();
         rowList.add(row);
@@ -39,10 +42,9 @@ public class ReplyKeyboardUtil {
 
     public static ReplyKeyboardMarkup menuKeyboardDriver() {
         KeyboardButton taskList = button("");
-        KeyboardButton order = button("\uD83D\uDCE5 Buyurtma olish");
+        KeyboardButton order = button("\uD83D\uDE95 Liniya kirish");
         KeyboardButton Suggestions = button("✅ Mening takliflarim");
         KeyboardButton driverInfo = button("\uD83D\uDDC2 Ma'lumotlaringiz");
-        KeyboardButton driverClient = button("Haydovchidan ➡️ Yolovchiga o'tishlik");
         KeyboardButton settings = button("⚙️ Sozlamalar");
         KeyboardButton olinganOrderlar = button("\uD83D\uDCE4 Olingan buyurtmalar");
 
@@ -56,14 +58,11 @@ public class ReplyKeyboardUtil {
         row2.add(Suggestions);
         KeyboardRow row3 = new KeyboardRow();
         row3.add(settings);
-        KeyboardRow row4 = new KeyboardRow();
-        row4.add(driverClient);
 
         List<KeyboardRow> rowList = new LinkedList<>();
         rowList.add(row1);
         rowList.add(row2);
         rowList.add(row3);
-        rowList.add(row4);
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(rowList);
@@ -128,7 +127,7 @@ public class ReplyKeyboardUtil {
         KeyboardButton row2 = button(" ✏️ Familiyani o'zgartirish");
         KeyboardButton row3 = button(" ✏️ Telefon raqamni o'zgartish");
         KeyboardButton row4 = button("Yolovchidan ➡️ Haydovchiga o'tishlik");
-        KeyboardButton row5 = button(" \uD83C\uDFE0 Bosh menyuga ");
+        KeyboardButton row5 = button(" \uD83C\uDFE0 Bosh menyuga qaytish");
 
 
         KeyboardRow rowList1 = new KeyboardRow();
@@ -163,7 +162,7 @@ public class ReplyKeyboardUtil {
         KeyboardButton row3 = button(" ✏️ Telefon raqamni o'zgartish");
         KeyboardButton row4 = button(" ➕ Avtomobil nomerini tahrirlash");
         KeyboardButton row5 = button("Haydovchidan ➡️ Yo'lovchiga o'tishlik");
-        KeyboardButton row6 = button(" \uD83C\uDFE0 Bosh menyuga ");
+        KeyboardButton row6 = button(" \uD83C\uDFE0 Bosh menyuga qaytish");
 
 
         KeyboardRow rowList1 = new KeyboardRow();
@@ -226,32 +225,63 @@ public class ReplyKeyboardUtil {
         return replyKeyboardMarkup;
     }
 
-
-
-   /* public static ReplyKeyboardMarkup Location() {
-        KeyboardButton button1 = KeyButtonUtil.keyButton("No");
-        KeyboardButton button2 = KeyButtonUtil.keyButton("Yes");
-        KeyboardButton button3 = KeyButtonUtil.keyButton("Back to location menu", ":arrow_left:");
-        KeyboardRow keyboardRow1 = KeyButtonUtil.keyRow(button1, button2);
-        KeyboardRow keyboardRow2 = KeyButtonUtil.keyRow(button3);
-        List<KeyboardRow> keyboardRowList = KeyButtonUtil.keyboardRowList(keyboardRow1, keyboardRow2);
-        return KeyButtonUtil.replyKeyboardMarkup(keyboardRowList);
-    }*/
-
- /*   public static ReplyKeyboardMarkup replyKeyboardMarkup(List<KeyboardRow> keyboardRowList) {
+    public static ReplyKeyboard listRegion() {
+        KeyboardButton region1 = button("Andijon vil.");
+        KeyboardButton region2 = button("Buxoro vil.");
+        KeyboardButton region3 = button("Farg'ona vil.");
+        KeyboardButton region4 = button("Jizzax vil.");
+        KeyboardButton region5 = button("Navoiy vil.");
+        KeyboardButton region6 = button("Namangan vil.");
+        KeyboardButton region7 = button("Qashqadaryo vil.");
+        KeyboardButton region8 = button("Qoraqalpog'iston Res.");
+        KeyboardButton region9 = button("Samarqand vil.");
+        KeyboardButton region10 = button("Surxandaryo vil.");
+        KeyboardButton region11 = button("Toshkent vil.");
+        KeyboardButton region12 = button("Xorazm vil.");
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(region1);
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(region2);
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(region3);
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add(region4);
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add(region5);
+        KeyboardRow row6 = new KeyboardRow();
+        row6.add(region6);
+        KeyboardRow row7 = new KeyboardRow();
+        row7.add(region7);
+        KeyboardRow row8 = new KeyboardRow();
+        row8.add(region8);
+        KeyboardRow row9 = new KeyboardRow();
+        row9.add(region9);
+        KeyboardRow row10 = new KeyboardRow();
+        row10.add(region10);
+        KeyboardRow row11 = new KeyboardRow();
+        row11.add(region11);
+        KeyboardRow row12 = new KeyboardRow();
+        row12.add(region12);
+        List<KeyboardRow> rowList = new LinkedList<>();
+        rowList.add(row1);
+        rowList.add(row2);
+        rowList.add(row3);
+        rowList.add(row4);
+        rowList.add(row5);
+        rowList.add(row6);
+        rowList.add(row7);
+        rowList.add(row8);
+        rowList.add(row9);
+        rowList.add(row10);
+        rowList.add(row11);
+        rowList.add(row12);
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+        replyKeyboardMarkup.setKeyboard(rowList);
+
         replyKeyboardMarkup.setResizeKeyboard(true);//buttonni razmerini to'g'irlaydi
         replyKeyboardMarkup.setSelective(true);// bottinga strelka qoshadi;
         replyKeyboardMarkup.setOneTimeKeyboard(true);
+
         return replyKeyboardMarkup;
-    }*/
-
-/*    public static KeyboardRow keyRow(KeyboardButton... keyboardButton) {
-        KeyboardRow keyboardRow = new KeyboardRow();
-        keyboardRow.addAll(Arrays.asList(keyboardButton));
-        return keyboardRow;
-
-    }*/
-
+    }
 }
