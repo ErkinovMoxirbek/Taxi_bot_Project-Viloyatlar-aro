@@ -39,8 +39,9 @@ public class PassengerController {
                 passengerService.editRole(text,message);
             } else if (text.startsWith("\uD83C\uDFE0 Bosh menyuga qaytish")) {
                 passengerService.exitMenu(message);
-            }
-            else if (profileRepository.findByUserId(message.getChatId()) != null){
+            } else if (text.startsWith("\uD83D\uDD0D Taxi qidirish")) {
+                passengerService.searchTaxi(message);
+            } else if (profileRepository.findByUserId(message.getChatId()) != null){
                 if ( profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_NAME)){
                     passengerService.enterName(text,message);
                     passengerService.enterSurname(text,message);

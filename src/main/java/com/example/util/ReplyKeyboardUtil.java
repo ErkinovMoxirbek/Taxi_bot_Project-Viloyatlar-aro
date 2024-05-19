@@ -52,7 +52,7 @@ public class ReplyKeyboardUtil {
         KeyboardButton butn2 = button("✅ Mening takliflarim");
         KeyboardButton butn3 = button("\uD83D\uDDC2 Ma'lumotlaringiz");
         KeyboardButton butn4 = button("⚙️ Sozlamalar");
-        KeyboardButton butn5 = button("\uD83D\uDCE4 Olingan buyurtmalar");
+        KeyboardButton butn5 = button("\uD83D\uDDC2 Liniya ma'lumotlari");
 
 
         KeyboardRow row1 = new KeyboardRow();
@@ -204,8 +204,7 @@ public class ReplyKeyboardUtil {
         return replyKeyboardMarkup;
     }
     public static ReplyKeyboardMarkup menuKeyboardPassenger() {
-        KeyboardButton order = button("\uD83D\uDCE5 Buyurtma berish");
-        KeyboardButton orders = button("\uD83D\uDCE5 Buyurtmalaringiz");
+        KeyboardButton order = button("\uD83D\uDD0D Taxi qidirish");;
         KeyboardButton Suggestions = button("✅ Mening takliflarim");
         KeyboardButton clientInfo = button("\uD83D\uDDC2 Ma'lumotlaringiz");
         KeyboardButton settings = button("⚙️ Sozlamalar");
@@ -213,7 +212,6 @@ public class ReplyKeyboardUtil {
 
         KeyboardRow row1 = new KeyboardRow();
         row1.add(order);
-        row1.add(orders);
 
         KeyboardRow row2 = new KeyboardRow();
         row2.add(Suggestions);

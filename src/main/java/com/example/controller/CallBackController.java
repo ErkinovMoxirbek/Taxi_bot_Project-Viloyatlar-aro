@@ -23,11 +23,15 @@ public class CallBackController {
                 if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.DRIVER)){
                     driverService.enterFromRegion(arr[0],arr[1],message);
                     driverService.enterFromDistrict(message);
+                } else if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.PASSENGER)) {
+                    passengerService.enterFromRegion(arr[1], message);
                 }
             } else if (data.startsWith("district") ) {
                 String [] arr = data.split("/");
                 if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.DRIVER)){
                     driverService.enterDistrict(arr[0],arr[1],message);
+                }else if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.PASSENGER)) {
+                    passengerService.enterDistrict(arr[1],message);
                 }
             } else if (data.startsWith("continue")) {
                 driverService.continueStep(message);

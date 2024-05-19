@@ -6,6 +6,7 @@ import com.example.enums.ProfileRole;
 import com.example.enums.ProfileStatus;
 import com.example.enums.ProfileStep;
 import com.example.info.InfoBot;
+import com.example.repository.OrderRepository;
 import com.example.repository.ProfileRepository;
 import com.example.service.DriverService;
 import com.example.util.ReplyKeyboardUtil;
@@ -29,6 +30,8 @@ public class MainController {
     private ProfileRepository profileRepository;
     @Autowired
     private DriverService driverService;
+    @Autowired
+    private OrderRepository orderRepository;
 
     public void handle(String text, Message message) {
         if (text != null) {
@@ -69,6 +72,9 @@ public class MainController {
             sendMessage.setText("Bo'limlardan birini tanlang!");
             sendMessage.enableHtml(true);
             ProfileEntity entity;
+            if (orderRepository.findByProfileId(message.getChatId()) != null) {
+                orderRepository.delete(orderRepository.findByProfileId(message.getChatId()));
+            }
             if (profileRepository.findByUserId(message.getChatId()) == null) {
                 entity = new ProfileEntity();
                 entity.setUserId(message.getChatId());

@@ -2,6 +2,7 @@ package com.example.entity;
 
 
 import com.example.enums.OrderStatus;
+import com.example.enums.ProfileRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +36,12 @@ public class OrderEntity {
     private Integer howManyPeopleTaxi = 0;
     @Column(name = "additional_info")
     private String additionalInfo;
+    @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
+    private ProfileRole userRole;
     @Column(name = "create_date")
     private LocalDateTime createDate = LocalDateTime.now();
 }

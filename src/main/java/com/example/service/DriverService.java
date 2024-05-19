@@ -211,6 +211,9 @@ public class DriverService {
         entity.setRole(ProfileRole.PASSENGER);
         entity.setStep(ProfileStep.DONE);
         myTelegramBot.updateProfileDB(entity);
+        if (orderRepostory.findByProfileId(message.getChatId())!= null){
+            orderRepostory.delete(orderRepostory.findByProfileId(message.getChatId()));
+        }
     }
 
     public void exitMenu(Message message) {
@@ -293,6 +296,7 @@ public class DriverService {
             orderEntity.setFromWhereRegion(regionName);
             orderEntity.setFromWhereDistrict("");
             orderEntity.setToWhereDistrict("");
+            orderEntity.setUserRole(ProfileRole.DRIVER);
             orderEntity.setOrderStatus(OrderStatus.NOACTIVE);
             orderRepostory.save(orderEntity);
             entity.setStep(ProfileStep.DONE);
@@ -361,7 +365,7 @@ public class DriverService {
                 sendMessage.setText("Siz buni tanlagansiz!");
                 myTelegramBot.sendMsg(sendMessage);
             }else {
-                orderEntity.setFromWhereDistrict(orderEntity.getFromWhereDistrict()+ " " + districtName);
+                orderEntity.setFromWhereDistrict(orderEntity.getFromWhereDistrict()+ "  " + districtName);
                 myTelegramBot.updateOrderDB(orderEntity);
                 myTelegramBot.updateProfileDB(entity);
             }
@@ -373,7 +377,7 @@ public class DriverService {
                 sendMessage.setText("Siz buni tanlagansiz!");
                 myTelegramBot.sendMsg(sendMessage);
             }else {
-                orderEntity.setToWhereDistrict(orderEntity.getToWhereDistrict()+ " " + districtName);
+                orderEntity.setToWhereDistrict(orderEntity.getToWhereDistrict()+ "  " + districtName);
                 myTelegramBot.updateOrderDB(orderEntity);
                 myTelegramBot.updateProfileDB(entity);
             }
@@ -382,11 +386,14 @@ public class DriverService {
 
     public void continueStep(Message message) {
         ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
+        OrderEntity orderEntity = orderRepostory.findByProfileId(message.getChatId());
         if (entity.getStep().equals(ProfileStep.ENTER_FROM_DISTRICT)) {
             enterToDistrict(message);
         }else if (entity.getStep().equals(ProfileStep.ENTER_TO_DISTRICT)) {
             entity.setStep(ProfileStep.DONE);
             entity.setVisible(Boolean.TRUE);
+            orderEntity.setOrderStatus(OrderStatus.ACTIVE);
+            myTelegramBot.updateOrderDB(orderEntity);
             myTelegramBot.updateProfileDB(entity);
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
@@ -399,6 +406,8 @@ public class DriverService {
             deleteMessage.setMessageId(entity.getLastMessageId());
             myTelegramBot.deleteMsg(deleteMessage);
             myTelegramBot.sendMsg(sendMessage);
+            System.out.println(orderRepostory.findByProfileId(message.getChatId()));
+
         }
     }
 
@@ -444,5 +453,23 @@ public class DriverService {
         sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardDriver(entity.getVisible()));
         myTelegramBot.sendMsg(sendMessage);
         orderRepostory.delete(orderEntity);
+    }
+
+    public void lineInfo(Message message) {
+        ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
+        OrderEntity orderEntity = orderRepostory.findByProfileId(message.getChatId());
+        if (entity.getVisible()){
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Ketish: ``" + orderEntity.getFromWhereDistrict().trim().replace("  " , ", ") + "``dan\n\nBorish: ``" + orderEntity.getToWhereDistrict().trim().replace("  " , ", ") + "``ga\n\nAvtomobil: " + entity.getCarModel() + ";\nAvtomobil raqam: " + entity.getCarNum() + ";\n" + orderEntity.getAdditionalInfo());
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardDriver(entity.getVisible()));
+            myTelegramBot.sendMsg(sendMessage);
+        }else{
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Siz hali liniya qo'shilmagansiz!");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardDriver(entity.getVisible()));
+            myTelegramBot.sendMsg(sendMessage);
+        }
     }
 }

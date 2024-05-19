@@ -45,6 +45,8 @@ public class DriverController {
                 driverService.enterLine(text ,message);
             } else if (text.startsWith("\uD83D\uDE95 Liniyadan chiqish")) {
                 driverService.exitLine(message);
+            } else if (text.startsWith("\uD83D\uDDC2 Liniya ma'lumotlari")) {
+                driverService.lineInfo(message);
             } else if (profileRepository.findByUserId(message.getChatId()) != null){
                 if ( profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_NAME)){
                     driverService.enterName(text,message);
