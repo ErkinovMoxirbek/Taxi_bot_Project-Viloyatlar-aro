@@ -41,8 +41,10 @@ public class DriverController {
                 driverService.exitMenu(message);
             } else if (text.startsWith("\uD83D\uDDC2 Ma'lumotlaringiz")) {
                 driverService.infoDriver(message);
-            } else if (text.startsWith("\uD83D\uDE95 Liniya kirish")) {
+            } else if (text.startsWith("\uD83D\uDE95 Liniyaga kirish")) {
                 driverService.enterLine(text ,message);
+            } else if (text.startsWith("\uD83D\uDE95 Liniyadan chiqish")) {
+                driverService.exitLine(message);
             } else if (profileRepository.findByUserId(message.getChatId()) != null){
                 if ( profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_NAME)){
                     driverService.enterName(text,message);
