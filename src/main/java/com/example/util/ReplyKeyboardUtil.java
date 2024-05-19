@@ -40,24 +40,30 @@ public class ReplyKeyboardUtil {
     }
 
 
-    public static ReplyKeyboardMarkup menuKeyboardDriver() {
+    public static ReplyKeyboardMarkup menuKeyboardDriver(Boolean active) {
+        String butn1Text ;
+        if (active) {
+            butn1Text = "\uD83D\uDE95 Liniyadan chiqish";
+        }else {
+            butn1Text = "\uD83D\uDE95 Liniyaga kirish";
+        }
         KeyboardButton taskList = button("");
-        KeyboardButton order = button("\uD83D\uDE95 Liniya kirish");
-        KeyboardButton Suggestions = button("✅ Mening takliflarim");
-        KeyboardButton driverInfo = button("\uD83D\uDDC2 Ma'lumotlaringiz");
-        KeyboardButton settings = button("⚙️ Sozlamalar");
-        KeyboardButton olinganOrderlar = button("\uD83D\uDCE4 Olingan buyurtmalar");
+        KeyboardButton butn1 = button(butn1Text);
+        KeyboardButton butn2 = button("✅ Mening takliflarim");
+        KeyboardButton butn3 = button("\uD83D\uDDC2 Ma'lumotlaringiz");
+        KeyboardButton butn4 = button("⚙️ Sozlamalar");
+        KeyboardButton butn5 = button("\uD83D\uDCE4 Olingan buyurtmalar");
 
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add(order);
-        row1.add(olinganOrderlar);
+        row1.add(butn1);
+        row1.add(butn2);
 
         KeyboardRow row2 = new KeyboardRow();
-        row2.add(driverInfo);
-        row2.add(Suggestions);
+        row2.add(butn3);
+        row2.add(butn4);
         KeyboardRow row3 = new KeyboardRow();
-        row3.add(settings);
+        row3.add(butn5);
 
         List<KeyboardRow> rowList = new LinkedList<>();
         rowList.add(row1);
@@ -161,8 +167,9 @@ public class ReplyKeyboardUtil {
         KeyboardButton row2 = button(" ✏️ Familiyani o'zgartirish");
         KeyboardButton row3 = button(" ✏️ Telefon raqamni o'zgartish");
         KeyboardButton row4 = button(" ➕ Avtomobil nomerini tahrirlash");
-        KeyboardButton row5 = button("Haydovchidan ➡️ Yo'lovchiga o'tishlik");
-        KeyboardButton row6 = button(" \uD83C\uDFE0 Bosh menyuga qaytish");
+        KeyboardButton row5 = button(" ➕ Avtomobil modelini tahrirlash");
+        KeyboardButton row6 = button("Haydovchidan ➡️ Yo'lovchiga o'tishlik");
+        KeyboardButton row7 = button(" \uD83C\uDFE0 Bosh menyuga qaytish");
 
 
         KeyboardRow rowList1 = new KeyboardRow();
@@ -177,6 +184,8 @@ public class ReplyKeyboardUtil {
         rowList4.add(row5);
         KeyboardRow rowList5 = new KeyboardRow();
         rowList5.add(row6);
+        KeyboardRow rowList6 = new KeyboardRow();
+        rowList6.add(row7);
 
         List<KeyboardRow> rowList = new LinkedList<>();
         rowList.add(rowList1);
@@ -184,6 +193,7 @@ public class ReplyKeyboardUtil {
         rowList.add(rowList3);
         rowList.add(rowList4);
         rowList.add(rowList5);
+        rowList.add(rowList6);
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(rowList);
 
