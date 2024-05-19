@@ -36,6 +36,8 @@ public class ProfileEntity {
     private String phoneNumber;
     @Column(name = "car_num")
     private String carNum;
+    @Column(name = "car_model")
+    private String carModel;
     @Column(name = "last_message_id")
     private Integer lastMessageId = 0;
     @Column(name = "visible")

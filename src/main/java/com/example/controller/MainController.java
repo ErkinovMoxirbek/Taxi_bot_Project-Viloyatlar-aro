@@ -76,7 +76,7 @@ public class MainController {
                 entity.setStatus(ProfileStatus.NOACTIVE);
                 entity.setStep(ProfileStep.DONE);
                 entity.setLastMessageId(0);
-                entity.setVisible(Boolean.TRUE);
+                entity.setVisible(Boolean.FALSE);
                 profileRepository.save(entity);
             }else {
                 entity = profileRepository.findByUserId(message.getChatId());
@@ -89,7 +89,7 @@ public class MainController {
                 myTelegramBot.updateProfileDB(entity);
             } else if (profileRepository.findByUserId(message.getChatId()).getStatus().equals(ProfileStatus.ACTIVE)) {
                 if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.DRIVER)) {
-                    sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardDriver());
+                    sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardDriver(entity.getVisible()));
                 } else if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.PASSENGER)) {
                     sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
                 }
