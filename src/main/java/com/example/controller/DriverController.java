@@ -58,7 +58,7 @@ public class DriverController {
                     System.out.println(text);
                     if (text.startsWith("+998") && text.length() == 13 && (text.trim()).matches("^[0-9+]+$")){
                         driverService.enterPhone(text,message);
-                        driverService.menu(text,message);
+                        driverService.enterCarModel(text,message);
                     }else {
                         SendMessage sendMessage = new SendMessage();
                         sendMessage.setChatId(message.getChatId());
@@ -66,7 +66,13 @@ public class DriverController {
                         sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
                         myTelegramBot.sendMsg(sendMessage);
                     }
-                }else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.EDIT_NAME)) {
+                }else if ( profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_CAR_MODEL)){
+                    driverService.enterCarModel(text,message);
+                    driverService.enterCarNum(text,message);
+                } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_CAR_NUM)) {
+                    driverService.enterCarNum(text,message);
+                    driverService.menu(text,message);
+                } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.EDIT_NAME)) {
                     driverService.editName(text,message);
                 } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.EDIT_SURNAME)) {
                     driverService.editSurname(text,message);

@@ -35,7 +35,7 @@ public class MainController {
 
     public void handle(String text, Message message) {
         if (text != null) {
-            if (text.equals("/start")) {
+            if (text.equals("/start") || text.equals("❌ Bekor qilish")) {
                 helloWorld(text, message);
             } else if (text.equals("Bot haqida")) {
                 infoBot.handle(message);
@@ -58,7 +58,11 @@ public class MainController {
             if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.DRIVER)) {
                 driverController.handle(message.getContact().getPhoneNumber(), message);
             } else if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.PASSENGER)) {
-                passengerController.handle(message.getContact().getPhoneNumber(), message);
+                String temp = message.getContact().getPhoneNumber();
+                if (message.getContact().getPhoneNumber().startsWith("998")) {
+                    temp = "+" + temp;
+                }
+                passengerController.handle(temp, message);
             }
         }
 
@@ -66,10 +70,20 @@ public class MainController {
     }
 
     public void helloWorld(String text, Message message) {
-        if (text.equals("/start")) {
+        if (text.equals("/start") || text.equals("❌ Bekor qilish")) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
-            sendMessage.setText("Bo'limlardan birini tanlang!");
+            if (profileRepository.findByUserId(message.getChatId()) == null){
+                sendMessage.setText("Assalomu alaykum sizni ko'rib turganimizdan hursandmiz!");
+            } else if (!profileRepository.findByUserId(message.getChatId()).getVisible()) {
+                ProfileEntity profileEntity = profileRepository.findByUserId(message.getChatId());
+                profileEntity.setStep(ProfileStep.DONE);
+                myTelegramBot.updateProfileDB(profileEntity);
+                message.setText("Yo'lovchi");
+                handle("Yo'lovchi",message);
+            } else {
+                sendMessage.setText("Bo'limlardan birini tanlang!");
+            }
             sendMessage.enableHtml(true);
             ProfileEntity entity;
             if (orderRepository.findByProfileId(message.getChatId()) != null) {
@@ -78,22 +92,25 @@ public class MainController {
             if (profileRepository.findByUserId(message.getChatId()) == null) {
                 entity = new ProfileEntity();
                 entity.setUserId(message.getChatId());
-                entity.setRole(ProfileRole.DONE);
+                entity.setRole(ProfileRole.PASSENGER);
                 entity.setStatus(ProfileStatus.NOACTIVE);
                 entity.setStep(ProfileStep.DONE);
                 entity.setLastMessageId(0);
                 entity.setVisible(Boolean.FALSE);
                 profileRepository.save(entity);
+                message.setText("Yo'lovchi");
+                myTelegramBot.sendMsg(sendMessage);
+                handle("Yo'lovchi",message);
             }else {
                 entity = profileRepository.findByUserId(message.getChatId());
             }
-            if (profileRepository.findByUserId(message.getChatId()).getStatus().equals(ProfileStatus.NOACTIVE)) {
-                sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboard());
-                entity.setRole(ProfileRole.DONE);
-                entity.setStep(ProfileStep.DONE);
-                entity.setLastMessageId(0);
-                myTelegramBot.updateProfileDB(entity);
-            } else if (profileRepository.findByUserId(message.getChatId()).getStatus().equals(ProfileStatus.ACTIVE)) {
+//            if (profileRepository.findByUserId(message.getChatId()).getStatus().equals(ProfileStatus.NOACTIVE)) {
+//                entity.setRole(ProfileRole.DONE);
+//                entity.setStep(ProfileStep.DONE);
+//                entity.setLastMessageId(0);
+//                myTelegramBot.updateProfileDB(entity);
+//            }
+             if (profileRepository.findByUserId(message.getChatId()).getStatus().equals(ProfileStatus.ACTIVE)) {
                 if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.DRIVER)) {
                     sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardDriver(entity.getVisible()));
                 } else if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.PASSENGER)) {
@@ -102,8 +119,8 @@ public class MainController {
                 entity.setStep(ProfileStep.DONE);
                 entity.setLastMessageId(0);
                 myTelegramBot.updateProfileDB(entity);
+                myTelegramBot.sendMsg(sendMessage);
             }
-            myTelegramBot.sendMsg(sendMessage);
 
         }
     }

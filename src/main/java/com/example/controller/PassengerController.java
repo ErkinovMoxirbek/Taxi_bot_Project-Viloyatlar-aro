@@ -74,6 +74,8 @@ public class PassengerController {
                         sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
                         myTelegramBot.sendMsg(sendMessage);
                     }
+                } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_ADDITIONAL_INFO)) {
+                    passengerService.enterAdditionalInfo(message);
                 }
             }
         }

@@ -31,7 +31,7 @@ public class PassengerService {
     public void helloPassenger(Message message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId());
-        sendMessage.setText("Assalomu alaykum siz tizimdan yo'lovchi sifatida ro'yhatdan o'tmoqchisiz!");
+        sendMessage.setText("Siz aval tizimdan ro'yhatdan o'tishingiz kerak bu bir marta talab etiladi va sizga ko'p qulayliklar yaratishimizga biz uchun yordam!");
         myTelegramBot.sendMsg(sendMessage);
     }
 
@@ -88,7 +88,7 @@ public class PassengerService {
         if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.DONE)) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
-            sendMessage.setText("Telefon raqamingizni (+998-XX-XXX-XX-XX) shu shaklda kiriting yoki kontaktni yuborish tugmasini bosing.");
+            sendMessage.setText("Telefon raqamingizni (+998-XX-XXX-XX-XX) shu shaklda kiriting yoki kontaktni yuborish tugmasini bosing.\n\nEslatma: Albatta siz yuborayotgan telefon raqami ishlashligi lozim. Chunki haydovchi siz yuborayotgan raqam orqali siz bilan aloqa chiqadi! ");
             sendMessage.setReplyMarkup(ReplyKeyboardUtil.phoneKeyboard());
             Message tempMessage = myTelegramBot.sendMsg(sendMessage);
             ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
@@ -99,6 +99,7 @@ public class PassengerService {
             ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
             entity.setPhoneNumber(text);
             entity.setStep(ProfileStep.DONE);
+            entity.setVisible(Boolean.TRUE);
             myTelegramBot.updateProfileDB(entity);
         }
     }
@@ -232,7 +233,7 @@ public class PassengerService {
         ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId());
-        sendMessage.setText("Ism: " + entity.getName() + ";\nFamiliya: " + entity.getSurname() + ";\nTelefon nomeringiz: " + entity.getPhoneNumber() + ";\nSiz tizimda yo'lovchisiz!");
+        sendMessage.setText("Ism: " + entity.getName() + ";\nFamiliya: " + entity.getSurname() + ";\nTelefon raqamingiz: " + entity.getPhoneNumber() + ";\nAgar ma'lumotlarni o'zgartimoqchi bo'lsangiz sozlamalar bo'limida buni bajara olasiz!");
         Message tempMessage = myTelegramBot.sendMsg(sendMessage);
         entity.setLastMessageId(tempMessage.getMessageId());
         profileRepository.save(entity);
@@ -303,25 +304,56 @@ public class PassengerService {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
             entity.setToWhereDistrict(district);
-            List<OrderEntity> list = orderRepository.findAllByOrderStatus(OrderStatus.ACTIVE);
-            if (list.size() > 0) {
-                for (OrderEntity order : list) {
-                    ProfileEntity profileEntity = profileRepository.findByUserId(order.getProfileId());
-                    if (order.getFromWhereDistrict().contains(entity.getFromWhereDistrict()) &&
-                            order.getToWhereDistrict().contains(entity.getToWhereDistrict())) {
-                        sendMessage.setText("Qayerdan: " + entity.getFromWhereDistrict() + ";\nQayerga: " + entity.getToWhereDistrict() + "; \n\uD83D\uDE97 Avtomobil: " + profileEntity.getCarModel() + "; \nAvtomobil raqami: " + profileEntity.getCarNum() + "; \n☎\uFE0F Telefon raqam: " + profileEntity.getPhoneNumber() + " " + profileEntity.getName() + "; \n\uD83D\uDCB8 Narx: " + entity.getPrice() + ";");
-                        myTelegramBot.sendMsg(sendMessage);
-                    }
-                    sendMessage.setText("Bosh menyu!");
-                    sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
-                    myTelegramBot.sendMsg(sendMessage);
-                }
-            }else {
-                sendMessage.setText("Bu yonalishda haydovchilar yo'q!");
-                sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
-                myTelegramBot.sendMsg(sendMessage);
-            }
+            myTelegramBot.updateOrderDB(entity);
+            enterAdditionalInfo(message);
+//            List<OrderEntity> list = orderRepository.findAllByOrderStatus(OrderStatus.ACTIVE);
+//            if (list.size() > 0) {
+//                for (OrderEntity order : list) {
+//                    ProfileEntity profileEntity = profileRepository.findByUserId(order.getProfileId());
+//                    if (order.getFromWhereDistrict().contains(entity.getFromWhereDistrict()) &&
+//                            order.getToWhereDistrict().contains(entity.getToWhereDistrict())) {
+//                        sendMessage.setText("Qayerdan: " + entity.getFromWhereDistrict() + ";\nQayerga: " + entity.getToWhereDistrict() + "; \n\uD83D\uDE97 Avtomobil: " + profileEntity.getCarModel() + "; \nAvtomobil raqami: " + profileEntity.getCarNum() + "; \n☎\uFE0F Telefon raqam: " + profileEntity.getPhoneNumber() + " " + profileEntity.getName() + "; \n\uD83D\uDCB8 Narx: " + entity.getPrice() + ";");
+//                        myTelegramBot.sendMsg(sendMessage);
+//                    }
+//                    sendMessage.setText("Bosh menyu!");
+//                    sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
+//                    myTelegramBot.sendMsg(sendMessage);
+//                }
+//            }else {
+//                sendMessage.setText("Bu yonalishda haydovchilar yo'q!");
+//                sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
+//                myTelegramBot.sendMsg(sendMessage);
+//            }
 
+        }
+    }
+
+    public void enterAdditionalInfo(Message message) {
+        OrderEntity entity = orderRepository.findByProfileId(message.getChatId());
+        ProfileEntity profileEntity = profileRepository.findByUserId(message.getChatId());
+        if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.DONE)){
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Qo'shimcha ma'lumot kiriting! \n\nMasalan: Men 17.00da yo'lga chiqishim kerak, Biz 2kishimiz, Qoshimcha nomerim +998991234567, ...\n\nShunga ohshash haydovchi uchun ma'lumot qoldiring bu sizga tez taksi topishingiz yordam beradi!");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
+            myTelegramBot.sendMsg(sendMessage);
+            profileEntity.setStep(ProfileStep.ENTER_ADDITIONAL_INFO);
+            myTelegramBot.updateProfileDB(profileEntity);
+            myTelegramBot.updateOrderDB(entity);
+        }else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_ADDITIONAL_INFO)){
+            entity.setAdditionalInfo(message.getText());
+            profileEntity.setStep(ProfileStep.DONE);
+            myTelegramBot.updateOrderDB(entity);
+            myTelegramBot.updateProfileDB(profileEntity);
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Siz uchun taksi qidirilmoqda...");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
+            myTelegramBot.sendMsg(sendMessage);
+            SendMessage sendMessage2 = new SendMessage();
+            sendMessage2.setText("Qayerdan: " + entity.getFromWhereDistrict() + ";\nQayerga: " + entity.getToWhereDistrict() + ";\nTelefon raqam: " + profileEntity.getPhoneNumber() + " " + profileEntity.getName() + ";\nQo'shimcha ma'lumot: " + entity.getAdditionalInfo() + ";" );
+            sendMessage2.setChatId("-1002086407002");
+            myTelegramBot.sendMsg(sendMessage2);
         }
     }
 }

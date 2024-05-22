@@ -3,6 +3,7 @@ package com.example.info;
 
 import com.example.MyTelegramBot;
 import com.example.util.InlineKeyBoardUtil;
+import com.example.util.ReplyKeyboardUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,7 +21,7 @@ public class InfoBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText("Bu yerda bot haqida boladi.");
         sendMessage.setChatId(message.getChatId());
-        sendMessage.setReplyMarkup(InlineKeyBoardUtil.getMenuKeyboard());
+        sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboard());
         myTelegramBot.sendMsg(sendMessage);
 
     }

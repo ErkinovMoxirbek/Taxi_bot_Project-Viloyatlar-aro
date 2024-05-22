@@ -132,7 +132,7 @@ public class ReplyKeyboardUtil {
         KeyboardButton row1 = button(" ✏️ Ismni o'zgartirish");
         KeyboardButton row2 = button(" ✏️ Familiyani o'zgartirish");
         KeyboardButton row3 = button(" ✏️ Telefon raqamni o'zgartish");
-        KeyboardButton row4 = button("Yolovchidan ➡️ Haydovchiga o'tishlik");
+//        KeyboardButton row4 = button("Yolovchidan ➡️ Haydovchiga o'tishlik");
         KeyboardButton row5 = button(" \uD83C\uDFE0 Bosh menyuga qaytish");
 
 
@@ -142,15 +142,15 @@ public class ReplyKeyboardUtil {
 
         KeyboardRow rowList2 = new KeyboardRow();
         rowList2.add(row3);
-        KeyboardRow rowList3 = new KeyboardRow();
-        rowList3.add(row4);
+//        KeyboardRow rowList3 = new KeyboardRow();
+//        rowList3.add(row4);
         KeyboardRow rowList4 = new KeyboardRow();
         rowList4.add(row5);
 
         List<KeyboardRow> rowList = new LinkedList<>();
         rowList.add(rowList1);
         rowList.add(rowList2);
-        rowList.add(rowList3);
+//        rowList.add(rowList3);
         rowList.add(rowList4);
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(rowList);

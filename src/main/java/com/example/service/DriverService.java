@@ -472,4 +472,48 @@ public class DriverService {
             myTelegramBot.sendMsg(sendMessage);
         }
     }
+
+    public void enterCarModel(String text, Message message) {
+        ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
+        if (entity.getStep().equals(ProfileStep.DONE)) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Avtomobilingiz modelini kiriting!\nMasalan: Cobalt, Nexia3, Captiva, ...");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
+            myTelegramBot.sendMsg(sendMessage);
+            entity.setStep(ProfileStep.ENTER_CAR_MODEL);
+            myTelegramBot.updateProfileDB(entity);
+        } else if (entity.getStep().equals(ProfileStep.ENTER_CAR_MODEL)) {
+            if (text != null && text.length() > 1 && (text.trim()).matches("^[A-Za-z`0-9']+$")) {
+                entity = profileRepository.findByUserId(message.getChatId());
+                entity.setCarModel(text);
+                entity.setStep(ProfileStep.DONE);
+                myTelegramBot.updateProfileDB(entity);
+            } else {
+                myTelegramBot.sendMessage("Avtomobil modeli tog'ri shaklda kiritilmadi qayta urining!", message.getChatId());
+            }
+        }
+    }
+
+    public void enterCarNum(String text, Message message) {
+        ProfileEntity entity = profileRepository.findByUserId(message.getChatId());
+        if (entity.getStep().equals(ProfileStep.DONE)) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Avtomobil raqamingizni kiriting!\nMasalan: 40A123BC");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
+            myTelegramBot.sendMsg(sendMessage);
+            entity.setStep(ProfileStep.ENTER_CAR_NUM);
+            myTelegramBot.updateProfileDB(entity);
+        } else if (entity.getStep().equals(ProfileStep.ENTER_CAR_NUM)) {
+            if (text != null && text.length() == 8 && (text.trim()).matches("^[A-Za-z0-9']+$")) {
+                entity = profileRepository.findByUserId(message.getChatId());
+                entity.setCarNum(text);
+                entity.setStep(ProfileStep.DONE);
+                myTelegramBot.updateProfileDB(entity);
+            } else {
+                myTelegramBot.sendMessage("Avtomobil raqami tog'ri shaklda kiritilmadi qayta urining!", message.getChatId());
+            }
+        }
+    }
 }
