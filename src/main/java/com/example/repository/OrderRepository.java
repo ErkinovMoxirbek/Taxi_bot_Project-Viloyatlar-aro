@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
+public interface OrderRepository extends CrudRepository<OrderEntity, Integer>  {
+
     List<OrderEntity> findAllByOrderStatus(OrderStatus status);
     OrderEntity findByProfileId(Long id);
 
@@ -20,14 +21,14 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
     @Modifying
     @Query("update  OrderEntity set fromWhereRegion = :fromWhereRegion, fromWhereDistrict = :fromWhereDistrict," +
             " toWhereRegion = :toWhereRegion, toWhereDistrict = :toWhereDistrict, price = :price, " +
-            "howManyPeople = :howManyPeople,howManyPeopleTaxi = :howManyPeopleTaxi, additionalInfo = :additionalInfo," +
+            "peopleCount = :peopleCount,howManyPeopleTaxi = :howManyPeopleTaxi, additionalInfo = :additionalInfo," +
             "orderStatus = :orderStatus where profileId = :profileId")
     Integer updateByProfileId(@Param("fromWhereRegion") String fromWhereRegion,
                            @Param("fromWhereDistrict") String fromWhereDistrict,
                            @Param("toWhereRegion") String toWhereRegion,
                            @Param("toWhereDistrict") String toWhereDistrict,
                            @Param("price") Double price,
-                           @Param("howManyPeople") Integer howManyPeople,
+                           @Param("peopleCount") String howManyPeople,
                            @Param("howManyPeopleTaxi") Integer howManyPeopleTaxi,
                            @Param("additionalInfo") String additionalInfo,
                            @Param("orderStatus") OrderStatus orderStatus,

@@ -231,6 +231,79 @@ public class ReplyKeyboardUtil {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
 
         return replyKeyboardMarkup;
+    }   public static ReplyKeyboardMarkup buttonPeopleCount() {
+        KeyboardButton butn1 = button("Pochta bor");;
+        KeyboardButton butn2 = button("1 kishi");
+        KeyboardButton butn3 = button("2 kishi");
+        KeyboardButton butn4 = button("3 kishi");
+        KeyboardButton butn5 = button("Bosh taxi kerak(Пустой)");
+        KeyboardButton butn6 = button("❌ Bekor qilish");
+
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(butn1);
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(butn2);
+        row2.add(butn3);
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(butn4);
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add(butn5);
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add(butn6);
+        List<KeyboardRow> rowList = new LinkedList<>();
+        rowList.add(row1);
+        rowList.add(row2);
+        rowList.add(row3);
+        rowList.add(row4);
+        rowList.add(row5);
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setKeyboard(rowList);
+
+        replyKeyboardMarkup.setResizeKeyboard(true);//buttonni razmerini to'g'irlaydi
+        replyKeyboardMarkup.setSelective(true);// bottinga strelka qoshadi;
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+
+        return replyKeyboardMarkup;
+    }
+    public static ReplyKeyboardMarkup buttonAdminMenu() {
+        KeyboardButton butn1 = button("Haydovchilarni ro'yhati");;
+        KeyboardButton butn2 = button("Haydovchini qidirish");
+        KeyboardButton butn3 = button("Sozlamalar");
+        KeyboardButton butn4 = button("Adminlar ro'yhati");
+        KeyboardButton butn5 = button("Orqaga");
+
+
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(butn1);
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(butn2);
+        KeyboardRow row3 = new KeyboardRow();
+        row2.add(butn3);
+        KeyboardRow row4 = new KeyboardRow();
+        row3.add(butn4);
+        KeyboardRow row5 = new KeyboardRow();
+        row4.add(butn5);
+
+        List<KeyboardRow> rowList = new LinkedList<>();
+        rowList.add(row1);
+        rowList.add(row2);
+        rowList.add(row3);
+        rowList.add(row4);
+        rowList.add(row5);
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setKeyboard(rowList);
+
+        replyKeyboardMarkup.setResizeKeyboard(true);//buttonni razmerini to'g'irlaydi
+        replyKeyboardMarkup.setSelective(true);// bottinga strelka qoshadi;
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+
+        return replyKeyboardMarkup;
     }
 
     public static ReplyKeyboard listRegion() {
@@ -292,4 +365,5 @@ public class ReplyKeyboardUtil {
 
         return replyKeyboardMarkup;
     }
+
 }

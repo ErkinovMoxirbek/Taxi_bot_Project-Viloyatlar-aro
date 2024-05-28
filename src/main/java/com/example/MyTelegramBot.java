@@ -32,11 +32,11 @@ public class MyTelegramBot extends TelegramLongPollingBot {
     private OrderRepository orderRepository;
     @Override
     public String getBotUsername() {
-        return "@viloyat_aro_taxi_bot";
+        return "@topamiz_robot";
     }
 
     public MyTelegramBot(TelegramBotsApi telegramBotsApi) throws TelegramApiException {
-        super("6708588106:AAE3PV-b3Wj1kCTgksQHjzyKcwB3eXJS-Lg");
+        super("6770493996:AAHwbwPAnLX12W_NnBYK6HN1iK-0hLTwp2U");
         telegramBotsApi.registerBot(this);
     }
 
@@ -103,7 +103,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
         orderRepository.updateByProfileId(entity.getFromWhereRegion(),
                 entity.getFromWhereDistrict(), entity.getToWhereRegion(),
                 entity.getToWhereDistrict(), entity.getPrice(),
-                entity.getHowManyPeople(),entity.getHowManyPeopleTaxi(),
+                entity.getPeopleCount(),entity.getHowManyPeopleTaxi(),
                 entity.getAdditionalInfo(),entity.getOrderStatus(),
                 entity.getProfileId());
     }

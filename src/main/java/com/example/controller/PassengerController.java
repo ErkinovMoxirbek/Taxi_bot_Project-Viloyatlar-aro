@@ -41,13 +41,16 @@ public class PassengerController {
                 passengerService.exitMenu(message);
             } else if (text.startsWith("\uD83D\uDD0D Taxi qidirish")) {
                 passengerService.searchTaxi(message);
+            } else if (text.startsWith("✅ Mening takliflarim")) {
+                passengerService.enterOffer(message);
             } else if (profileRepository.findByUserId(message.getChatId()) != null){
                 if ( profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_NAME)){
                     passengerService.enterName(text,message);
-                    passengerService.enterSurname(text,message);
+                    passengerService.enterPhone(text,message);
+//                    passengerService.enterSurname(text,message);
                 } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_SURNAME)) {
                     passengerService.enterSurname(text,message);
-                    passengerService.enterPhone(text,message);
+//                    passengerService.enterPhone(text,message);
                 } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_PHONE)) {
                     System.out.println(text);
                     if (text.startsWith("+998") && text.length() == 13 && (text.trim()).matches("^[0-9+]+$")){
@@ -74,8 +77,13 @@ public class PassengerController {
                         sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
                         myTelegramBot.sendMsg(sendMessage);
                     }
+                } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_PEOPLE_COUNT)){
+                    passengerService.enterPeopleCount(message);
+                    passengerService.enterAdditionalInfo(message);
                 } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_ADDITIONAL_INFO)) {
                     passengerService.enterAdditionalInfo(message);
+                } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_OFFEN)) {
+                    passengerService.enterOffer(message);
                 }
             }
         }

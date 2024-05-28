@@ -30,8 +30,8 @@ public class OrderEntity {
     private String toWhereDistrict;
     @Column(name = "price")
     private Double price =  0.0;
-    @Column(name = "how_many_people")
-    private Integer howManyPeople = 0;
+    @Column(name = "people_count")
+    private String peopleCount ;
     @Column(name = "how_many_people_taxi")
     private Integer howManyPeopleTaxi = 0;
     @Column(name = "additional_info")

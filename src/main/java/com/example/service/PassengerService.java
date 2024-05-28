@@ -3,7 +3,6 @@ package com.example.service;
 import com.example.MyTelegramBot;
 import com.example.entity.OrderEntity;
 import com.example.entity.ProfileEntity;
-import com.example.enums.OrderStatus;
 import com.example.enums.ProfileRole;
 import com.example.enums.ProfileStatus;
 import com.example.enums.ProfileStep;
@@ -13,11 +12,12 @@ import com.example.util.InlineKeyBoardUtil;
 import com.example.util.ReplyKeyboardUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import java.util.List;
+import javax.swing.*;
 
 @Service
 public class PassengerService {
@@ -305,7 +305,7 @@ public class PassengerService {
             sendMessage.setChatId(message.getChatId());
             entity.setToWhereDistrict(district);
             myTelegramBot.updateOrderDB(entity);
-            enterAdditionalInfo(message);
+            enterPeopleCount(message);
 //            List<OrderEntity> list = orderRepository.findAllByOrderStatus(OrderStatus.ACTIVE);
 //            if (list.size() > 0) {
 //                for (OrderEntity order : list) {
@@ -328,13 +328,42 @@ public class PassengerService {
         }
     }
 
+    public void enterPeopleCount(Message message) {
+        ProfileEntity profileEntity = profileRepository.findByUserId(message.getChatId());
+        OrderEntity entity = orderRepository.findByProfileId(message.getChatId());
+        if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.DONE)){
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Nechta yo'lovchi bor yoki pochtangiz bormi?");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.buttonPeopleCount());
+            myTelegramBot.sendMsg(sendMessage);
+            profileEntity.setStep(ProfileStep.ENTER_PEOPLE_COUNT);
+            myTelegramBot.updateProfileDB(profileEntity);
+            myTelegramBot.updateOrderDB(entity);
+        }else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_PEOPLE_COUNT)){
+            if (message.getText().equals("Pochta bor") || message.getText().equals("1 kishi") || message.getText().equals("2 kishi") || message.getText().equals("3 kishi")|| message.getText().equals("Bosh taxi kerak(Пустой)")) {
+                entity.setPeopleCount(message.getText());
+                profileEntity.setStep(ProfileStep.DONE);
+                myTelegramBot.updateOrderDB(entity);
+                myTelegramBot.updateProfileDB(profileEntity);
+            }else {
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setChatId(message.getChatId());
+                sendMessage.setText("Sizga ko'rsatilayotgan tugmalardan foydalaning❗\uFE0F❗\uFE0F❗\uFE0F");
+                sendMessage.setReplyMarkup(ReplyKeyboardUtil.buttonPeopleCount());
+                myTelegramBot.sendMsg(sendMessage);
+            }
+
+        }
+    }
+
     public void enterAdditionalInfo(Message message) {
         OrderEntity entity = orderRepository.findByProfileId(message.getChatId());
         ProfileEntity profileEntity = profileRepository.findByUserId(message.getChatId());
         if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.DONE)){
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
-            sendMessage.setText("Qo'shimcha ma'lumot kiriting! \n\nMasalan: Men 17.00da yo'lga chiqishim kerak, Biz 2kishimiz, Qoshimcha nomerim +998991234567, ...\n\nShunga ohshash haydovchi uchun ma'lumot qoldiring bu sizga tez taksi topishingiz yordam beradi!");
+            sendMessage.setText("Qo'shimcha ma'lumot kiriting! \n\nMasalan: \nSoat nechida ketish kerakligi, Qo'shimcha telefon raqam.\n\nShunga ohshash haydovchi uchun ma'lumot qoldiring bu sizga tez taksi topishingiz va manzilga sog'-salomat yetib olishingizga yordam beradi!");
             sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
             myTelegramBot.sendMsg(sendMessage);
             profileEntity.setStep(ProfileStep.ENTER_ADDITIONAL_INFO);
@@ -347,13 +376,50 @@ public class PassengerService {
             myTelegramBot.updateProfileDB(profileEntity);
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
-            sendMessage.setText("Siz uchun taksi qidirilmoqda...");
+            sendMessage.setText("Siz uchun taksi qidirilmoqda...\n\nSizga TAXI xizmati zarur bo'lsa quyidagi raqamga murojaat qiling.\n☎\uFE0F +998911444461");
             sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
             myTelegramBot.sendMsg(sendMessage);
             SendMessage sendMessage2 = new SendMessage();
-            sendMessage2.setText("Qayerdan: " + entity.getFromWhereDistrict() + ";\nQayerga: " + entity.getToWhereDistrict() + ";\nTelefon raqam: " + profileEntity.getPhoneNumber() + " " + profileEntity.getName() + ";\nQo'shimcha ma'lumot: " + entity.getAdditionalInfo() + ";" );
+            String htmlText = "Qayerdan:<b> " + entity.getFromWhereDistrict() + "</b>;\n" +
+                    "Qayerga:<b> " + entity.getToWhereDistrict() + "</b>;\n" +
+                    "Telefon raqam: " + profileEntity.getPhoneNumber() + " " + profileEntity.getName() + ";\n" +
+                    entity.getPeopleCount() + " ketishi kerak!;\n" +
+                    "Qo'shimcha ma'lumot: " + entity.getAdditionalInfo() + ";";
+
+            sendMessage2.setText(htmlText);
+            sendMessage2.setParseMode("HTML");
             sendMessage2.setChatId("-1002086407002");
+            if (orderRepository.findByProfileId(message.getChatId()) != null){
+                orderRepository.delete(orderRepository.findByProfileId(message.getChatId()));
+            }
             myTelegramBot.sendMsg(sendMessage2);
         }
+    }
+
+    public void enterOffer(Message message) {
+        ProfileEntity profileEntity = profileRepository.findByUserId(message.getChatId());
+        if (profileEntity.getStep().equals(ProfileStep.DONE)){
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Taklifingizni jo'nating!");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.cancel());
+            myTelegramBot.sendMsg(sendMessage);
+            profileEntity.setStep(ProfileStep.ENTER_OFFEN);
+            myTelegramBot.updateProfileDB(profileEntity);
+        } else if (profileEntity.getStep().equals(ProfileStep.ENTER_OFFEN)) {
+            ForwardMessage forwardMessage = new ForwardMessage();
+            forwardMessage.setChatId("@TM6669008");
+            forwardMessage.setFromChatId(message.getChatId());
+            forwardMessage.setMessageId(message.getMessageId());
+            myTelegramBot.sendMsg(forwardMessage);
+            profileEntity.setStep(ProfileStep.DONE);
+            myTelegramBot.updateProfileDB(profileEntity);
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setText("Taklifingizni qabul qilindi!");
+            sendMessage.setReplyMarkup(ReplyKeyboardUtil.menuKeyboardPassenger());
+            myTelegramBot.sendMsg(sendMessage);
+        }
+
     }
 }
