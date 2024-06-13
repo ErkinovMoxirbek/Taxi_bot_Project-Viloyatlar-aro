@@ -97,7 +97,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
                 entity.getSurname(), entity.getRole(),
                 entity.getStatus(), entity.getStep(),
                 entity.getPhoneNumber(),entity.getCarNum(),
-                entity.getLastMessageId(),entity.getVisible(),
+                entity.getLastMessageId(),entity.getVisible(),entity.getSendMessageGroup(),
                 entity.getUserId());
     } public void updateOrderDB(OrderEntity entity){
         orderRepository.updateByProfileId(entity.getFromWhereRegion(),

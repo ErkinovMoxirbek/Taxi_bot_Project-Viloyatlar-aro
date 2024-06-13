@@ -21,5 +21,5 @@ public class AdminInfoEntity {
     @Column(name = "password")
     private String password = "admin";
     @Column(name = "visible")
-    private Boolean visible = Boolean.FALSE;
+    private Boolean visible = Boolean.TRUE;
 }

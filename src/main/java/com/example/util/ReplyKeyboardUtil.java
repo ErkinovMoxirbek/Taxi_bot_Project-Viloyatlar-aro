@@ -269,7 +269,8 @@ public class ReplyKeyboardUtil {
         return replyKeyboardMarkup;
     }
     public static ReplyKeyboardMarkup buttonAdminMenu() {
-        KeyboardButton butn1 = button("Haydovchilarni ro'yhati");;
+//        KeyboardButton butn1 = button("Haydovchilarni ro'yhati");;
+        KeyboardButton butn6 = button("Haydovchi qo'shish");;
         KeyboardButton butn2 = button("Haydovchini qidirish");
         KeyboardButton butn3 = button("Sozlamalar");
         KeyboardButton butn4 = button("Adminlar ro'yhati");
@@ -277,13 +278,14 @@ public class ReplyKeyboardUtil {
 
 
 
-        KeyboardRow row1 = new KeyboardRow();
-        row1.add(butn1);
 
+        KeyboardRow row1 = new KeyboardRow();
+//        row1.add(butn1);
+        row1.add(butn6);
         KeyboardRow row2 = new KeyboardRow();
         row2.add(butn2);
         KeyboardRow row3 = new KeyboardRow();
-        row2.add(butn3);
+        row3.add(butn3);
         KeyboardRow row4 = new KeyboardRow();
         row3.add(butn4);
         KeyboardRow row5 = new KeyboardRow();

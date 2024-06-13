@@ -188,8 +188,8 @@ public class PassengerService {
             entity.setLastMessageId(tempMessage.getMessageId());
             entity.setStep(ProfileStep.EDIT_PHONE);
             myTelegramBot.updateProfileDB(entity);
-        } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_NAME)) {
-            entity.setName(text);
+        } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.EDIT_PHONE)) {
+            entity.setPhoneNumber(text);
             entity.setStep(ProfileStep.DONE);
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(message.getChatId());
@@ -421,5 +421,28 @@ public class PassengerService {
             myTelegramBot.sendMsg(sendMessage);
         }
 
+    }
+
+    public void checkUser(Message message) {
+        ProfileEntity profileEntity = profileRepository.findByUserId(message.getFrom().getId());
+        if (profileEntity.getSendMessageGroup() == null){
+            profileEntity.setSendMessageGroup(Boolean.FALSE);
+            myTelegramBot.updateProfileDB(profileEntity);
+        }
+        if (profileEntity == null || !profileEntity.getSendMessageGroup()){
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId());
+            sendMessage.setReplyToMessageId(message.getMessageId());
+            sendMessage.setText("ASSALOMU ALAYKUM #" + message.getFrom().getFirstName() + " SIZNING ZAKAZINGIZ SHAFYORLAR \uD83D\uDE96 GURUHIGA TUSHDI ✅\n" +
+                    "LICHKADA ISHONCHLI SHAFYORLARIMIZ KUTMOQDA❗\uFE0F \n\nYOKI ADMINGA MUROJAT QILING:\n" +
+                    "☎\uFE0F +998911444461\n" +
+                    "☎\uFE0F +998912026224\nQULAYLIK UCHUN \uD83E\uDD16 BOT ORQALI ZAKAZ BERISH MUMKIN\uD83D\uDC47\uD83D\uDC47\uD83D\uDC47");
+            sendMessage.setReplyMarkup(InlineKeyBoardUtil.linkBot());
+            myTelegramBot.sendMsg(sendMessage);
+            DeleteMessage deleteMessage = new DeleteMessage();
+            deleteMessage.setChatId(message.getChatId());
+            deleteMessage.setMessageId(message.getMessageId());
+            myTelegramBot.deleteMsg(deleteMessage);
+        }
     }
 }

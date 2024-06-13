@@ -42,4 +42,6 @@ public class ProfileEntity {
     private Integer lastMessageId = 0;
     @Column(name = "visible")
     private Boolean visible = Boolean.FALSE;
+    @Column(name = "send_message_group")
+    private Boolean sendMessageGroup = Boolean.FALSE;
 }

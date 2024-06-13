@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.enums.ProfileRole;
 import com.example.repository.ProfileRepository;
+import com.example.service.AdminInfoService;
 import com.example.service.DriverService;
 import com.example.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class CallBackController {
     private DriverService driverService;
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private AdminInfoService adminInfoService;
     public void handle(String data, Message message) {
         if (data != null){
             if (data.startsWith("region")){
@@ -32,6 +35,11 @@ public class CallBackController {
                     driverService.enterDistrict(arr[0],arr[1],message);
                 }else if (profileRepository.findByUserId(message.getChatId()).getRole().equals(ProfileRole.PASSENGER)) {
                     passengerService.enterDistrict(arr[1],message);
+                }
+            } else if (data.startsWith("deleteDriver")) {
+                String [] arr = data.split("/");
+                if (arr.length == 2) {
+                    adminInfoService.deleteDriver(arr[1],message);
                 }
             } else if (data.startsWith("continue")) {
                 driverService.continueStep(message);

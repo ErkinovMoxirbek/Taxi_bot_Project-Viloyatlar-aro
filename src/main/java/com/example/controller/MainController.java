@@ -11,6 +11,7 @@ import com.example.repository.AdminInfoRepository;
 import com.example.repository.OrderRepository;
 import com.example.repository.ProfileRepository;
 import com.example.service.DriverService;
+import com.example.service.PassengerService;
 import com.example.util.ReplyKeyboardUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,8 +39,13 @@ public class MainController {
     private AdminInfoController adminInfoController;
     @Autowired
     private AdminInfoRepository adminInfoRepository;
+    @Autowired
+    private PassengerService passengerService;
 
     public void handle(String text, Message message) {
+        if (message.getChatId() < 0){
+            passengerService.checkUser(message);
+        }
         if (adminInfoRepository.findByInfoId(1) == null){
             AdminInfoEntity adminInfoEntity = new AdminInfoEntity();
             adminInfoRepository.save(adminInfoEntity);

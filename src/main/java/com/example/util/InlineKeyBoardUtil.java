@@ -31,6 +31,30 @@ public class InlineKeyBoardUtil {
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
     }
+    public static InlineKeyboardMarkup deleteDriver(Long userId) {
+        List<InlineKeyboardButton> row = new LinkedList<>();
+        InlineKeyboardButton button1 = InlineKeyBoardUtil.button("Haydovchilikdan chiqarish", "deleteDriver/" + userId);
+        row.add(button1);
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new LinkedList<>();
+        rowList.add(row);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }public static InlineKeyboardMarkup linkBot() {
+        List<InlineKeyboardButton> row = new LinkedList<>();
+        InlineKeyboardButton button1 = InlineKeyBoardUtil.button("✅ TEZ TAKSI CHAQIRISH ✅","");
+        button1.setUrl("https://t.me/viloyat_aro_taxi_bot?start");
+        row.add(button1);
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new LinkedList<>();
+        rowList.add(row);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
     public static  InlineKeyboardMarkup getListRegion(){
         List<InlineKeyboardButton> row1 = new LinkedList<>();
         List<InlineKeyboardButton> row2 = new LinkedList<>();

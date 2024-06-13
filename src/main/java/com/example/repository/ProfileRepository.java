@@ -16,12 +16,14 @@ import java.util.List;
 @Repository
 public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer> {
     List<ProfileEntity> findAllByRole(ProfileRole role);
+    List<ProfileEntity> findAllBySendMessageGroupAndStatusAndPhoneNumber(Boolean sendMessageGroup,ProfileStatus status, String phoneNumber);
 
     ProfileEntity findByUserId(Long id);
+    List<ProfileEntity> findAllByPhoneNumber(String phone);
 
     @Transactional
     @Modifying
-    @Query("update  ProfileEntity set name = :name, surname = :surname, role = :role, status = :status, step = :step, phoneNumber = :phone,carNum = :carNum, lastMessageId = :messageId,visible = :visible where userId = :userId")
+    @Query("update  ProfileEntity set name = :name, surname = :surname, role = :role, status = :status, step = :step, phoneNumber = :phone,carNum = :carNum, lastMessageId = :messageId,visible = :visible,sendMessageGroup = :sendMessageGroup where userId = :userId")
     Integer updateByUserId(@Param("name") String name,
                            @Param("surname") String surname,
                            @Param("role") ProfileRole role,
@@ -31,6 +33,7 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
                            @Param("carNum") String carNum,
                            @Param("messageId") Integer lastMessageId,
                            @Param("visible") Boolean visible,
+                           @Param("sendMessageGroup") Boolean sendMessageGroup,
                            @Param("userId") Long userId);
 
 }

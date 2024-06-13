@@ -25,6 +25,18 @@ public class AdminInfoController {
             adminInfoService.enterLogin(message);
         } else if (message.getText().equals("Orqaga")) {
             adminInfoService.exitAdmin(message);
+        }
+//        else if (message.getText().equals("Haydovchilarni ro'yhati")) {
+//            adminInfoService.listDriver(message);
+//        }
+        else if (message.getText().equals("Haydovchi qo'shish")) {
+            adminInfoService.addDriver(message);
+        } else if (message.getText().equals("Haydovchini qidirish")) {
+            adminInfoService.searchDriver(message);
+        } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_DRIVER_PHONE)) {
+            adminInfoService.addDriver(message);
+        } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_SEARCH_DRIVER_PHONE)) {
+            adminInfoService.searchDriver(message);
         } else if (profileRepository.findByUserId(message.getChatId()).getStep().equals(ProfileStep.ENTER_LOGIN)) {
             adminInfoService.enterLogin(message);
 
